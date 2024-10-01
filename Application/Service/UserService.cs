@@ -1,13 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Application.Common.Constants;
 using Application.DTOs.Requests;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
-using Application.Security;
 using AutoMapper;
 using Domain.Entities.Entity;
+using MongoDB.Driver;
 
 
 namespace Application.Service
@@ -15,23 +13,29 @@ namespace Application.Service
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IRoleRepository _roleRepository;
         private readonly IMapper _mapper;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, IRoleRepository roleRepository, IMapper mapper)
         {
             _userRepository = userRepository;
+            _roleRepository = roleRepository;
+            _mapper = mapper;
         }
-
-        public Task<bool> AddUser(UserRegisterRequest model)
+        public async Task<bool> AddUser(UserRegisterRequest model)
         {
+            var filter = Builders<Role>.Filter.Eq(m => m.RoleName, RoleConstants.User);
+            var role = await _roleRepository.FindWhereAsync(filter);
             var user = _mapper.Map<User>(model);
-            user.PasswordHash = PasswordHasher.HashPassword(model.Password);
-            _userRepository.CreateAsync
+            user.RoleId = role.Id;
+            await _userRepository.CreateAsync(user);
+            return true;
         }
 
-        public Task<IEnumerable<User>> GetAll()
+        public async Task<IEnumerable<User>> GetAll()
         {
-            throw new NotImplementedException();
+            var users = await _userRepository.GetAllAsync();
+            return users;
         }
     }
 }

@@ -1,3 +1,4 @@
+using Application.DTOs.Requests;
 using Application.Interfaces.Services;
 using Domain.Entities.Entity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,26 +19,17 @@ public class UserController : ControllerBase
         _userService = userService;
     }
 
-    [HttpGet(Name = "GetWeatherForecast")]
+    [HttpGet]
     public async Task<IActionResult> Get()
     {
         var data = await _userService.GetAll();
         return Ok(data);
     }
 
-    [HttpPost(Name = "GetWeatherForecast")]
-    public async Task<IActionResult> Add()
+    [HttpPost]
+    public async Task<IActionResult> Add(UserRegisterRequest model)
     {
-        var user = new User
-        {
-            RoleId = new ObjectId("66fba6832f36b3cc30200f78"),
-            Email = "as@example.com",
-            Username = "user1",
-            PasswordHash = "sad",
-            Firstname = "first",
-            Lastname = "user1"
-        };
-        await _userService.Add(user);
+        await _userService.AddUser(model);
         return Ok();
     }
 }

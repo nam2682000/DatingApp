@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.Repositories;
+﻿using System.Reflection;
+using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Service;
 using Infrastructure.Repositories;
@@ -21,7 +22,7 @@ namespace WebUI.DependencyInjection
                 .Build();
         }
 
-        public static IServiceCollection Injection(this IServiceCollection services)
+        public static IServiceCollection Injection(this IServiceCollection services, Assembly assembly)
         {
             services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
             services.AddAutoMapper(typeof(AutoMapperProfile));
@@ -33,15 +34,24 @@ namespace WebUI.DependencyInjection
             services.AddScoped(s =>
                 s.GetRequiredService<IMongoClient>().GetDatabase(configuration.GetValue<string>("MongoDB:DatabaseName")));
 
-            // Registering the UserRepository
-            services.AddScoped<IUserRepository>(s =>
-                new UserRepository(s.GetRequiredService<IMongoDatabase>(), "User"));
+            services.AddScoped<IUserRepository>(s => new UserRepository(s.GetRequiredService<IMongoDatabase>(), "User"));
+            services.AddScoped<ILikeRepository>(s => new LikeRepository(s.GetRequiredService<IMongoDatabase>(), "Like"));
+            services.AddScoped<IBlockRepository>(s => new BlockRepository(s.GetRequiredService<IMongoDatabase>(), "Block"));
+            services.AddScoped<IMessageRepository>(s => new MessageRepository(s.GetRequiredService<IMongoDatabase>(), "Message"));
+            services.AddScoped<IRoleRepository>(s => new RoleRepository(s.GetRequiredService<IMongoDatabase>(), "Role"));
+            services.AddScoped<IInterestRepository>(s => new InterestRepository(s.GetRequiredService<IMongoDatabase>(), "Interest"));
 
-            // Registering the UserService
-            services.AddScoped<IUserService, UserService>();
+            var types = assembly.DefinedTypes
+            .Where(t => t.IsClass && !t.IsAbstract && t.GetInterfaces().Any() && t.Name.EndsWith("Service"));
+            foreach (var type in types)
+            {
+                var interfaceType = type.GetInterfaces().FirstOrDefault();
+                if (interfaceType != null)
+                {
+                    services.AddScoped(interfaceType, type);
+                }
+            }
             
-            services.AddScoped<IJwtTokenService, JwtTokenService>();
-
             return services;
         }
     }

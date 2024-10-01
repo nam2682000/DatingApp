@@ -2,9 +2,11 @@ using Application.Validators;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using WebUI.DependencyInjection;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.Injection();
+var assembly = Assembly.Load("Application");
+builder.Services.Injection(assembly);
 builder.Services.AddControllers();
 builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 // Đăng ký tất cả các Validators trong Assembly chứa UserValidator

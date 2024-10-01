@@ -7,5 +7,7 @@ namespace Application.Interfaces.Services
     {
         Task<IEnumerable<User>> GetAll();
         Task<bool> AddUser(UserRegisterRequest user);
+        // Task<bool> EditUser(UserRegisterRequest user);
+
     }
 }
