@@ -2,6 +2,8 @@
 using Application.Interfaces.Services;
 using Application.Service;
 using Infrastructure.Repositories;
+using Infrastructure.Services;
+using Infrastructure.Settings;
 using MongoDB.Driver;
 
 namespace WebUI.DependencyInjection
@@ -21,6 +23,8 @@ namespace WebUI.DependencyInjection
 
         public static IServiceCollection Injection(this IServiceCollection services)
         {
+            services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
+            services.AddAutoMapper(typeof(AutoMapperProfile));
             // Registering the MongoDB client as a singleton
             services.AddSingleton<IMongoClient>(s =>
                 new MongoClient(configuration.GetValue<string>("MongoDB:ConnectionString")));
@@ -35,6 +39,8 @@ namespace WebUI.DependencyInjection
 
             // Registering the UserService
             services.AddScoped<IUserService, UserService>();
+            
+            services.AddScoped<IJwtTokenService, JwtTokenService>();
 
             return services;
         }

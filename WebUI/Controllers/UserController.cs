@@ -1,7 +1,7 @@
 using Application.Interfaces.Services;
-using Application.Service;
 using Domain.Entities.Entity;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 
 namespace WebUI.Controllers;
 
@@ -28,11 +28,14 @@ public class UserController : ControllerBase
     [HttpPost(Name = "GetWeatherForecast")]
     public async Task<IActionResult> Add()
     {
-        var user = new User{
+        var user = new User
+        {
+            RoleId = new ObjectId("66fba6832f36b3cc30200f78"),
+            Email = "as@example.com",
             Username = "user1",
             PasswordHash = "sad",
             Firstname = "first",
-            Lastname = "user1"        
+            Lastname = "user1"
         };
         await _userService.Add(user);
         return Ok();

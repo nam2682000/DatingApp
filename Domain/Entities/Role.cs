@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using MongoDB.Bson;
 
 namespace Domain.Entities.Entity;
-public class Interest
+public class Role
 {
-    public ObjectId Id { get; set; } 
-    public required string InterestName  { get; set; }      
+    public ObjectId Id { get; set; }
+    public required string RoleName { get; set; }
 }

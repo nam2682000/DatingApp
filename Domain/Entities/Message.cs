@@ -11,6 +11,6 @@ public class Message
     public ObjectId Id { get; set; }
     public ObjectId SenderId { get; set; }
     public ObjectId ReceiverId { get; set; }
-    public string Content { get; set; }
+    public string Content { get; set; } = string.Empty;
     public DateTime Timestamp { get; set; }
 }

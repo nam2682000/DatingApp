@@ -2,33 +2,36 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.DTOs.Requests;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
-using Application.Setting;
+using Application.Security;
+using AutoMapper;
 using Domain.Entities.Entity;
-using Microsoft.Extensions.Options;
-using MongoDB.Driver;
+
 
 namespace Application.Service
 {
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
 
         public UserService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }
 
-        public async Task<bool> Add(User user)
+        public Task<bool> AddUser(UserRegisterRequest model)
         {
-            await _userRepository.CreateAsync(user);
-            return true;
+            var user = _mapper.Map<User>(model);
+            user.PasswordHash = PasswordHasher.HashPassword(model.Password);
+            _userRepository.CreateAsync
         }
 
-        public async Task<IEnumerable<User>> GetAll()
+        public Task<IEnumerable<User>> GetAll()
         {
-            return await _userRepository.GetAllAsync();
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,9 +1,14 @@
+using Application.Validators;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using WebUI.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.Injection();
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
+// Đăng ký tất cả các Validators trong Assembly chứa UserValidator
+builder.Services.AddValidatorsFromAssemblyContaining<UserValidator>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
