@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.DTOs.DTO;
 using Application.Interfaces.Repositories;
 using Domain.Entities.Entity;
 using Infrastructure.Context;
@@ -9,10 +10,10 @@ using MongoDB.Driver;
 
 namespace Infrastructure.Repositories
 {
-    public class BlockRepository : RepositoryBase<Block>, IBlockRepository
+    public class MatchRepository : RepositoryBase<Match>, IMatchRepository
     {
         private readonly MongoDbContext _context;
-        public BlockRepository(IMongoDatabase database, MongoDbContext context) : base(database, "Block")
+        public MatchRepository(IMongoDatabase database, MongoDbContext context) : base(database, "Match")
         {
             _context = context;
         }

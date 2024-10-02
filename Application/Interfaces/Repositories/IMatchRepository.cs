@@ -8,9 +8,7 @@ using MongoDB.Driver;
 
 namespace Application.Interfaces.Repositories
 {
-    public interface IUserRepository:IRepositoryBase<User>
+    public interface IMatchRepository:IRepositoryBase<Match>
     {
-        public Task<User> GetUserByEmailAsync(string email);
-        public Task<List<UserDTO>> GetUserAllWithReferenceAsync(FilterDefinition<User> filter);
     }
 }

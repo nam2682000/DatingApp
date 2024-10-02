@@ -7,7 +7,7 @@ using MongoDB.Driver;
 
 namespace Infrastructure.Repositories
 {
-    public class RepositoryBase<T> : IRepositoryBase<T> where T : class
+    public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {
         private readonly IMongoCollection<T> _collection;
         public RepositoryBase(IMongoDatabase database, string collectionName)
@@ -50,6 +50,18 @@ namespace Infrastructure.Repositories
         public async Task<T> FindWhereAsync(FilterDefinition<T> filter)
         {
             return await _collection.Find(filter).FirstOrDefaultAsync();
+        }
+
+        public async Task CreateManyAsync(List<T> entitys)
+        {
+            await _collection.InsertManyAsync(entitys);
+        }
+
+        public async Task<bool> DeleteManyAsync(string[] ids)
+        {
+            var filter = Builders<T>.Filter.In("_id", ids);
+            var result = await _collection.DeleteManyAsync(filter);
+            return result.IsAcknowledged && result.DeletedCount > 0;
         }
     }
 }

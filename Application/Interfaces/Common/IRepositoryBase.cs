@@ -11,8 +11,9 @@ namespace Application
         Task<IEnumerable<T>> GetAllAsync();
         Task<T> FindByIdAsync(string id);
         Task CreateAsync(T entity);
+        Task CreateManyAsync(List<T> entitys);
         Task<bool> UpdateAsync(string id, T entity);
-        Task<bool> DeleteAsync(string id);
+        Task<bool> DeleteManyAsync(string[] ids);
         Task<IEnumerable<T>> GetWhereAsync(FilterDefinition<T> filter);
         Task<T> FindWhereAsync(FilterDefinition<T> filter);
     }

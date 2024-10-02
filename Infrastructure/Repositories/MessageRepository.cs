@@ -4,14 +4,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using Application.Interfaces.Repositories;
 using Domain.Entities.Entity;
+using Infrastructure.Context;
 using MongoDB.Driver;
 
 namespace Infrastructure.Repositories
 {
     public class MessageRepository : RepositoryBase<Message>, IMessageRepository
     {
-        public MessageRepository(IMongoDatabase database, string collectionName) : base(database, collectionName)
+        private readonly MongoDbContext _context;
+        public MessageRepository(IMongoDatabase database, MongoDbContext context) : base(database, "Message")
         {
+            _context = context;
         }
     }
 }
