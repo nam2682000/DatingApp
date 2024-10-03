@@ -11,4 +11,18 @@ namespace Application.Common.Constants
         public const string User = "User";
         public const string UserVip = "User Vip";
     }
+
+    public static class GenderConstants
+    {
+        public const string Male = "Male";
+        public const string Female = "Female";
+    }
+    
+    public static class AccountStatusConstants
+    {
+        public const string Active = "Active";
+        public const string Banned = "Banned";
+        public const string Stop = "Stop";
+    }
+
 }

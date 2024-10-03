@@ -17,6 +17,8 @@ namespace Application.DTOs.DTO
         public required string Email { get; set; }
         public required string PasswordHash { get; set; }
         public required Role Role { get; set; }
+        public required DateTime DateOfBirth { get; set; }
+        public required string Gender { get; set; }
         public GeoJsonPoint<GeoJson2DCoordinates>? Location { get; set; }
         public bool EmailIsActive { get; set; }
         public string? ProfilePicture { get; set; } // Đường dẫn đến ảnh hồ sơ

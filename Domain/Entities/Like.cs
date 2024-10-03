@@ -10,6 +10,6 @@ public class Like
 {
     public ObjectId Id { get; set; }
     public ObjectId UserId { get; set; } // Người dùng thích
-    public ObjectId LikedUserId { get; set; } // Người dùng được thích
-    public DateTime Timestamp { get; set; }
+    public ObjectId UserLikeeId { get; set; } // Người dùng được thích
+    public DateTime LikedAt { get; set; }
 }

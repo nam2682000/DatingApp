@@ -25,6 +25,11 @@ namespace Infrastructure.Repositories
             return await _collection.Find(Builders<T>.Filter.Eq("_id", id)).FirstOrDefaultAsync();
         }
 
+        public async Task<bool> AnyAsync(FilterDefinition<T> filter)
+        {
+            return await _collection.Find(filter).AnyAsync();
+        }
+
         public async Task CreateAsync(T entity)
         {
             await _collection.InsertOneAsync(entity);
@@ -42,9 +47,12 @@ namespace Infrastructure.Repositories
             return result.IsAcknowledged && result.DeletedCount > 0;
         }
 
-        public async Task<IEnumerable<T>> GetWhereAsync(FilterDefinition<T> filter)
+        public async Task<List<T>> GetWhereSelectAsync(FilterDefinition<T> filter, ProjectionDefinition<T> projection = null)
         {
-            return await _collection.Find(filter).ToListAsync();
+            if(projection is null){
+                return await _collection.Find(filter).ToListAsync();
+            }
+            return await _collection.Find(filter).Project<T>(projection).ToListAsync();
         }
 
         public async Task<T> FindWhereAsync(FilterDefinition<T> filter)

@@ -9,6 +9,6 @@ public class ViewUser
 {
     public ObjectId Id { get; set; }
     public ObjectId UserId { get; set; }
-    public ObjectId UserViewId { get; set; }
+    public ObjectId UserViewedId { get; set; }
     public DateTime ViewAt { get; set; }
 }

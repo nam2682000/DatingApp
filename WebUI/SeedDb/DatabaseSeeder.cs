@@ -41,7 +41,7 @@ namespace WebUI.SeedDb
                 };
                 await _roleRepository.CreateManyAsync(roles);
                 var filter = Builders<Role>.Filter.Empty;
-                var rolesInData = await _roleRepository.GetWhereAsync(filter);
+                var rolesInData = await _roleRepository.GetWhereSelectAsync(filter);
                 var users = new List<User>
                 {
                     new User
@@ -50,6 +50,8 @@ namespace WebUI.SeedDb
                         Firstname = "admin",
                         Lastname = "admin",
                         Email = "nam2682000@gmail.com",
+                        DateOfBirth = DateTime.Now,
+                        Gender = GenderConstants.Male,
                         PasswordHash = PasswordHasher.HashPassword("admin123"),
                         RoleId = rolesInData.FirstOrDefault(m=>m.RoleName == RoleConstants.Admin)!.Id,
                         CreatedAt = DateTime.UtcNow,
@@ -60,6 +62,8 @@ namespace WebUI.SeedDb
                         Firstname = "user1",
                         Lastname = "user1",
                         Email = "user1@gmail.com",
+                        DateOfBirth = DateTime.Now,
+                        Gender = GenderConstants.Male,
                         PasswordHash = PasswordHasher.HashPassword("user1123"),
                         RoleId = rolesInData.FirstOrDefault(m=>m.RoleName == RoleConstants.User)!.Id,
                         CreatedAt = DateTime.UtcNow,
@@ -70,6 +74,8 @@ namespace WebUI.SeedDb
                         Firstname = "uservip1",
                         Lastname = "uservip1",
                         Email = "uservip1@gmail.com",
+                        DateOfBirth = DateTime.Now,
+                        Gender = GenderConstants.Male,
                         PasswordHash = PasswordHasher.HashPassword("uservip1123"),
                         RoleId = rolesInData.FirstOrDefault(m=>m.RoleName == RoleConstants.UserVip)!.Id,
                         CreatedAt = DateTime.UtcNow,
