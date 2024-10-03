@@ -28,8 +28,9 @@ namespace Application.DTOs.DTO
         public double? Longitude { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
-
+        public DateTime LastActive { get; set; }
         public ObjectId RoleId { get; set; }
         public List<ObjectId>? InterestIds { get; set; }
+        public string? Status { get; set; } // Mô tả cá nhân
     }
 }

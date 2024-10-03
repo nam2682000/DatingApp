@@ -8,7 +8,7 @@ namespace Application.Interfaces.Services
     public interface IUserService
     {
         Task<List<UserProfileReponse>> GetAll();
-        Task<bool> AddUser(UserRegisterRequest model);
+        Task<bool> UserRegister(UserRegisterRequest model);
         Task<bool> UserUpdateProfile(string userId, UserProfileRequest model);
         Task<bool> UserLikeUser(string userLikerId, string userLikeeId);
         Task<bool> UserNextUser(string userId, string userNextedId);

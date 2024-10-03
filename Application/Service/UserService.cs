@@ -30,7 +30,7 @@ namespace Application.Service
             _viewerUserRepository = viewerUserRepository;
             _likeRepository = likeRepository;
         }
-        public async Task<bool> AddUser(UserRegisterRequest model)
+        public async Task<bool> UserRegister(UserRegisterRequest model)
         {
             var filter = Builders<Role>.Filter.Eq(m => m.RoleName, RoleConstants.User);
             var role = await _roleRepository.FindWhereAsync(filter);
