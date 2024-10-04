@@ -1,7 +1,9 @@
 ﻿using System.Reflection;
 using System.Text;
+using Application.Interfaces.Services;
 using Application.Setting;
 using Infrastructure.Context;
+using Infrastructure.Services;
 using Infrastructure.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -80,6 +82,7 @@ namespace WebUI.DependencyInjection
                     services.AddScoped(interfaceType, type);
                 }
             }
+            services.AddScoped<IJwtTokenService,JwtTokenService>();
             services.AddScoped<DatabaseSeeder>();
             return services;
         }

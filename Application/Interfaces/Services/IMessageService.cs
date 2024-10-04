@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace Application.Interfaces.Services
 {
-    public interface IJwtTokenService
+    public interface IMessageService
     {
-        string GenerateToken(string username, string userId, string role, bool rememberMe);
-    }
+        public Task<bool> SendMessage(string userFromId, string userToId, string mess);
+    } 
 }

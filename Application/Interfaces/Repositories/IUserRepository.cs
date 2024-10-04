@@ -12,6 +12,7 @@ namespace Application.Interfaces.Repositories
     {
         public Task<User> GetUserByEmailAsync(string email);
         public Task<List<UserDTO>> GetUserAllWithReferenceAsync(FilterDefinition<User> filter);
+        public Task<UserDTO> GetUserWithReferenceAsync(FilterDefinition<User> filter);
         public Task<bool> UserLikeUser(string userLikerId, string userLikeeId);
     }
 }

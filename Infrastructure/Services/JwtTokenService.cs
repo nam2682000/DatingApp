@@ -17,7 +17,7 @@ namespace Infrastructure.Services
             _jwtSettings = jwtSettings.Value;
         }
 
-        public string GenerateToken(string username, string userId, string role)
+        public string GenerateToken(string username, string userId, string role, bool rememberMe)
         {
             // Thêm các claims cần thiết vào token
             var claims = new[]
@@ -35,7 +35,7 @@ namespace Infrastructure.Services
                 issuer: _jwtSettings.Issuer,
                 audience: _jwtSettings.Audience,
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(_jwtSettings.ExpirationMinutes),  // Token có thời hạn 30 phút
+                expires: rememberMe ? DateTime.Now.AddDays(_jwtSettings.ExpirationMinutes) : DateTime.Now.AddMinutes(_jwtSettings.ExpirationMinutes),  // Token có thời hạn 30 phút
                 signingCredentials: creds
             );
             // Trả về token dưới dạng string

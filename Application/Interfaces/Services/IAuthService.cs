@@ -7,6 +7,6 @@ namespace Application.Interfaces.Services
 {
     public interface IAuthService
     {
-        public string Login(string userName, string pass, bool isRequire);
+        public Task<string> Login(string userName, string pass, bool rememberMe);
     }
 }

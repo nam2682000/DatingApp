@@ -13,4 +13,4 @@ public class Message
     public ObjectId ReceiverId { get; set; }
     public string Content { get; set; } = string.Empty;
     public DateTime MessageAt { get; set; }
-}
+}  

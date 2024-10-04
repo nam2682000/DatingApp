@@ -30,7 +30,7 @@ public class UserController : ControllerBase
         return BadRequest();
     }
 
-    [HttpGet("users")]
+    [HttpGet("all")]
     public async Task<IActionResult> GetAll()
     { 
         var data = await _userService.GetAll();
@@ -50,9 +50,32 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("user-register")]
-    public async Task<IActionResult> UserUpdateProfile(UserRegisterRequest model)
+    public async Task<IActionResult> UserRegister(UserRegisterRequest model)
     {
         var data = await _userService.UserRegister(model);
         return Ok(data);
+    }
+
+    [HttpPost("user-like")]
+    public async Task<IActionResult> UserLikeUser(string userLikeeId)
+    {
+        var userId = User.FindFirstValue("userId");
+        if (userId is not null)
+        {
+            var data = await _userService.UserLikeUser(userId,userLikeeId);
+            return Ok(data);
+        }
+        return BadRequest();
+    }
+    [HttpPost("user-next")]
+    public async Task<IActionResult> UserNextUser(string userLikeeId)
+    {
+        var userId = User.FindFirstValue("userId");
+        if (userId is not null)
+        {
+            var data = await _userService.UserNextUser(userId,userLikeeId);
+            return Ok(data);
+        }
+        return BadRequest();
     }
 }
