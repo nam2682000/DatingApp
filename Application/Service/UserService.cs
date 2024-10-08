@@ -30,20 +30,6 @@ namespace Application.Service
             _viewerUserRepository = viewerUserRepository;
             _likeRepository = likeRepository;
         }
-        public async Task<bool> UserRegister(UserRegisterRequest model)
-        {
-            var filter = Builders<Role>.Filter.Eq(m => m.RoleName, RoleConstants.User);
-            var role = await _roleRepository.FindWhereAsync(filter);
-            var user = _mapper.Map<User>(model);
-            if (role is null)
-            {
-                throw new Exception("Role is null");
-            }
-            user.RoleId = role.Id;
-            await _userRepository.CreateAsync(user);
-            return true;
-        }
-
         public async Task<List<UserProfileReponse>> GetAll()
         {
             var filter = Builders<User>.Filter.Empty;
@@ -94,6 +80,15 @@ namespace Application.Service
             return await _userRepository.UpdateAsync(userId, user);
         }
 
+        public async Task<UserProfileReponse> MyProfile(string userId)
+        {
+            var userIdBson = new MongoDB.Bson.ObjectId(userId);
+            var filter = Builders<User>.Filter.Where(m=>m.Id == userIdBson);
+            var users = await _userRepository.GetUserWithReferenceAsync(filter);
+            var result = _mapper.Map<UserProfileReponse>(users);
+            return result;
+        }
+
         /// <summary>
         /// Check user 2 is like user 1
         /// </summary>
@@ -106,5 +101,7 @@ namespace Application.Service
             var result = await _likeRepository.AnyAsync(filter);
             return result;
         }
+
+        
     }
 }

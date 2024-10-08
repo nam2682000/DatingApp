@@ -18,7 +18,19 @@ public class UserController : ControllerBase
         _userService = userService;
     }
 
-    [HttpGet]
+    [HttpGet("my-profile")]
+    public async Task<IActionResult> MyProfile()
+    {
+        var userId = User.FindFirstValue("userId");
+        if (userId is not null)
+        {
+            var data = await _userService.MyProfile(userId);
+            return Ok(data);
+        }
+        return BadRequest();  
+    }
+
+    [HttpGet("get-new-user")]
     public async Task<IActionResult> Get()
     {
         var userId = User.FindFirstValue("userId");
@@ -47,13 +59,6 @@ public class UserController : ControllerBase
             return Ok(data);
         }
         return BadRequest();
-    }
-
-    [HttpPost("user-register")]
-    public async Task<IActionResult> UserRegister(UserRegisterRequest model)
-    {
-        var data = await _userService.UserRegister(model);
-        return Ok(data);
     }
 
     [HttpPost("user-like")]

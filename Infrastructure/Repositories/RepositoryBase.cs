@@ -47,7 +47,7 @@ namespace Infrastructure.Repositories
             return result.IsAcknowledged && result.DeletedCount > 0;
         }
 
-        public async Task<List<T>> GetWhereSelectAsync(FilterDefinition<T> filter, ProjectionDefinition<T> projection = null)
+        public async Task<List<T>> GetWhereSelectAsync(FilterDefinition<T> filter, ProjectionDefinition<T>? projection = null)
         {
             if(projection is null){
                 return await _collection.Find(filter).ToListAsync();
