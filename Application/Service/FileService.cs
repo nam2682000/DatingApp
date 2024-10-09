@@ -28,13 +28,10 @@ namespace Application.Service
 
         public async Task<string> UserUploadAvatarFile(IFormFile file,  string userId)
         {
-
-            var data = _webHostEnvironment.WebRootPath;
             if (file.Length > 0)
             {
                 // Lấy đường dẫn tới thư mục wwwroot
-                var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
-
+                var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", userId);
                 // Tạo thư mục nếu chưa tồn tại
                 if (!Directory.Exists(uploadPath))
                 {
@@ -44,6 +41,12 @@ namespace Application.Service
                 var filePath = Path.Combine(uploadPath, file.FileName);
                 using var stream = File.Create(filePath);
                 await file.CopyToAsync(stream);
+                var user = await _userRepository.FindByIdAsync(userId);
+                if(user is null){
+                    throw new Exception("User cannot found");
+                }
+                user.ProfilePicture = filePath;
+                await _userRepository.UpdateAsync(userId, user);
                 return filePath;
             }
             return string.Empty;

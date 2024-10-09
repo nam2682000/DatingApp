@@ -12,7 +12,7 @@ namespace Application.DTOs.Responses
         public required string LastMess { get; set; }
         public bool IsLastMessSelf { get; set; }
         public DateTime DateTime { get; set; }
-        public ObjectId UserId { get; set; }
+        public string? UserId { get; set; }
         public UserMessageResponse? User { get; set; }
     }
 

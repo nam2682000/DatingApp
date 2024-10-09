@@ -14,7 +14,6 @@ namespace Application.DTOs.Responses.User
         public required string Lastname { get; set; }
         public required string Email { get; set; }
         public required string Gender { get; set; }
-        public bool EmailIsActive { get; set; } 
         public Role? Role { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public GeoJsonPoint<GeoJson2DCoordinates>? Location { get; set; }
@@ -22,7 +21,5 @@ namespace Application.DTOs.Responses.User
         public string? ProfilePicture { get; set; } // Đường dẫn đến ảnh hồ sơ
         public string? Bio { get; set; } // Mô tả cá nhân
         public List<Interest>? Interests { get; set; }
-        public double? Latitude { get; set; }
-        public double? Longitude { get; set; }
     }
 }

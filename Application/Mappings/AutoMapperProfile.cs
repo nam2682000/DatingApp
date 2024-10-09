@@ -12,8 +12,7 @@ public class AutoMapperProfile : Profile
     {
         CreateMap<User, UserProfileReponse>().ReverseMap();
         CreateMap<UserProfileReponse, UserDTO>().ReverseMap();
-        CreateMap<UserRegisterRequest, User>().ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(src => PasswordHasher.HashPassword(src.Password)));
-        CreateMap<User, UserRegisterRequest>();
+        CreateMap<UserRegisterRequest, User>().ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(src => PasswordHasher.HashPassword(src.Password))).ReverseMap();
         CreateMap<User, UserMessageResponse>().ReverseMap();
     }
 }

@@ -8,6 +8,7 @@ using Application.Interfaces.Services;
 using AutoMapper;
 using Domain.Entities.Entity;
 using MongoDB.Driver;
+using MongoDB.Driver.GeoJsonObjectModel;
 
 
 namespace Application.Service
@@ -40,9 +41,8 @@ namespace Application.Service
 
         public async Task<UserProfileReponse> GetNewUser(string userId)
         {
-            var userIdBson = new MongoDB.Bson.ObjectId(userId);
             var fields = Builders<ViewUser>.Projection.Include(p => p.UserViewedId);
-            var filter = Builders<ViewUser>.Filter.Where(m => m.UserId == userIdBson);
+            var filter = Builders<ViewUser>.Filter.Where(m => m.UserId == userId);
             var userVieweds = await _viewerUserRepository.GetWhereSelectAsync(filter, fields);
             var userViewedIds = userVieweds.Select(m => m.UserViewedId).ToArray();
             var filterUser = Builders<User>.Filter.Where(m => !userViewedIds.Contains(m.Id));
@@ -59,49 +59,34 @@ namespace Application.Service
         {
             await _viewerUserRepository.CreateAsync(new ViewUser
             {
-                UserId = new MongoDB.Bson.ObjectId(userId),
-                UserViewedId = new MongoDB.Bson.ObjectId(userNextedId),
+                UserId = userId,
+                UserViewedId = userNextedId,
             });
             return true;
         }
 
         public async Task<bool> UserUpdateProfile(string userId, UserProfileRequest model)
         {
+            var location = new GeoJsonPoint<GeoJson2DCoordinates>(new GeoJson2DCoordinates(model.Longitude??0, model.Latitude??0));
             var user = await _userRepository.FindByIdAsync(userId);
             user.Username = model.Username;
             user.Firstname = model.Firstname;
             user.Lastname = model.Lastname;
             user.Email = model.Email;
-            user.Latitude = model.Latitude;
-            user.Longitude = model.Longitude;
             user.DateOfBirth = model.DateOfBirth;
             user.Gender = model.Gender;
-            user.InterestIds = model.Interests?.Select(m => new MongoDB.Bson.ObjectId(m)).ToList();
+            user.Bio = model.Bio;
+            user.InterestIds = model.Interests;
+            user.Location = location;
             return await _userRepository.UpdateAsync(userId, user);
         }
 
         public async Task<UserProfileReponse> MyProfile(string userId)
         {
-            var userIdBson = new MongoDB.Bson.ObjectId(userId);
-            var filter = Builders<User>.Filter.Where(m=>m.Id == userIdBson);
+            var filter = Builders<User>.Filter.Where(m=>m.Id == userId);
             var users = await _userRepository.GetUserWithReferenceAsync(filter);
             var result = _mapper.Map<UserProfileReponse>(users);
             return result;
         }
-
-        /// <summary>
-        /// Check user 2 is like user 1
-        /// </summary>
-        /// <param name="user1"></param>
-        /// <param name="user2"></param>
-        /// <returns></returns>
-        private async Task<bool> CheckIsMatch(MongoDB.Bson.ObjectId user2, MongoDB.Bson.ObjectId user1)
-        {
-            var filter = Builders<Like>.Filter.Where(m => m.UserId == user2 && m.UserLikeeId == user1);
-            var result = await _likeRepository.AnyAsync(filter);
-            return result;
-        }
-
-        
     }
 }

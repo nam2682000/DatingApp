@@ -7,8 +7,8 @@ using MongoDB.Bson;
 namespace Domain.Entities.Entity;
 public class ViewUser
 {
-    public ObjectId Id { get; set; }
-    public ObjectId UserId { get; set; }
-    public ObjectId UserViewedId { get; set; }
+    public string Id { get; set; } = Guid.NewGuid().ToString();
+    public required string UserId { get; set; }
+    public required string UserViewedId { get; set; }
     public DateTime ViewAt { get; set; }
 }

@@ -7,6 +7,6 @@ using MongoDB.Bson;
 namespace Domain.Entities.Entity;
 public class Role
 {
-    public ObjectId Id { get; set; }
+    public string Id { get; set; } = Guid.NewGuid().ToString();
     public required string RoleName { get; set; }
 }

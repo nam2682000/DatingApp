@@ -31,9 +31,7 @@ namespace Application.Service
          public async Task<MessageResponses> GetMessageByUser(string userId, string receiverId)
         {
             var result = new MessageResponses();
-            var userIdBson = new MongoDB.Bson.ObjectId(userId);
-            var receiverIdBson = new MongoDB.Bson.ObjectId(receiverId);
-            var filter = Builders<Message>.Filter.Where(m=>(m.SenderId == userIdBson && m.ReceiverId == receiverIdBson) || (m.SenderId == receiverIdBson && m.ReceiverId == userIdBson));
+            var filter = Builders<Message>.Filter.Where(m=>(m.SenderId == userId && m.ReceiverId == receiverId) || (m.SenderId == receiverId && m.ReceiverId == userId));
             var mess = await _messageRepository.GetWhereSelectAsync(filter);
             var receiver = await _userRepository.FindByIdAsync(receiverId);
             result.Messages = mess;
@@ -43,11 +41,9 @@ namespace Application.Service
 
         public async Task<bool> SendMessage(string userFromId, string userToId, string mess)
         {
-            var userFrom = new MongoDB.Bson.ObjectId(userFromId);
-            var userTo = new MongoDB.Bson.ObjectId(userFromId);
             await _messageRepository.CreateAsync(new Message{
-                SenderId = userFrom,
-                ReceiverId = userTo,
+                SenderId = userFromId,
+                ReceiverId = userToId,
                 Content = mess,
                 MessageAt = DateTime.Now
             });

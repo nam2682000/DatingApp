@@ -7,8 +7,8 @@ using MongoDB.Bson;
 namespace Domain.Entities.Entity;
 public class Block
 {
-    public ObjectId Id { get; set; }
-    public ObjectId UserId { get; set; } // Người dùng thích
-    public ObjectId UserBlockedId { get; set; } // Người dùng được thích
+    public string Id { get; set; } = Guid.NewGuid().ToString();
+    public required string UserId { get; set; } // Người dùng thích
+    public required string UserBlockedId { get; set; } // Người dùng được thích
     public DateTime BlockAt { get; set; }
 }

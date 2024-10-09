@@ -7,6 +7,6 @@ using MongoDB.Bson;
 namespace Domain.Entities.Entity;
 public class Interest
 {
-    public ObjectId Id { get; set; } 
+    public string Id { get; set; } = Guid.NewGuid().ToString();
     public required string InterestName  { get; set; }      
 }

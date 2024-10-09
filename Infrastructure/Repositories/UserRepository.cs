@@ -73,30 +73,28 @@ namespace Infrastructure.Repositories
                 session.StartTransaction();
                 try
                 {
-                    var userId1 = new MongoDB.Bson.ObjectId(userLikerId);
-                    var userId2 = new MongoDB.Bson.ObjectId(userLikeeId);
                     await _context.Likes.InsertOneAsync(session, new Like
                     {
-                        UserId = userId1,
-                        UserLikeeId = userId2,
+                        UserId = userLikerId,
+                        UserLikeeId = userLikeeId,
                         LikedAt = DateTime.Now
                     });
 
-                    var checkIsLike = await _context.Likes.Find(session, m => m.UserId == userId2 && m.UserLikeeId == userId1).FirstOrDefaultAsync();
+                    var checkIsLike = await _context.Likes.Find(session, m => m.UserId == userLikeeId && m.UserLikeeId == userLikerId).FirstOrDefaultAsync();
                     if (checkIsLike != null)
                     {
                         await _context.Matchs.InsertOneAsync(session, new Match
                         {
-                            User1 = userId1,
-                            User2 = userId2,
+                            User1 = userLikerId,
+                            User2 = userLikeeId,
                             MatchedAt = DateTime.Now
                         });
                     }
 
                     await _context.ViewUsers.InsertOneAsync(session, new ViewUser
                     {
-                        UserId = userId1,
-                        UserViewedId = userId2,
+                        UserId = userLikerId,
+                        UserViewedId = userLikeeId,
                     });
 
                     await session.CommitTransactionAsync();
