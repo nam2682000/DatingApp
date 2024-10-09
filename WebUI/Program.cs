@@ -43,6 +43,16 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "MyAllowSpecificOrigins",
+                      builder =>
+                      {
+                          builder.WithOrigins("http://localhost:5173");
+                      });
+});
+
+
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
@@ -58,10 +68,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+
 app.UseAuthentication();
-
 app.UseAuthorization();
-
+app.UseCors("MyAllowSpecificOrigins");
 app.UseStaticFiles();
 
 app.MapControllers();

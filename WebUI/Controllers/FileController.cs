@@ -21,7 +21,12 @@ public class FileController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> UploadFile(IFormFile file)
     {
-        string token = await _fileService.UserUploadAvatarFile(file,"1232");
-        return Ok(token);
+        var userId = User.FindFirstValue("userId");
+        if (userId is not null)
+        {
+            string filePath = await _fileService.UserUploadAvatarFile(file,userId);
+            return Ok(filePath);
+        }
+        return BadRequest();
     }
 }

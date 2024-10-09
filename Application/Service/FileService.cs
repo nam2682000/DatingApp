@@ -19,11 +19,13 @@ namespace Application.Service
     {
         private readonly IUserRepository _userRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public FileService(IWebHostEnvironment webHostEnvironment, IUserRepository userRepository)
+        public FileService(IWebHostEnvironment webHostEnvironment, IUserRepository userRepository, IHttpContextAccessor httpContextAccessor)
         {
             _webHostEnvironment = webHostEnvironment;
             _userRepository = userRepository;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<string> UserUploadAvatarFile(IFormFile file,  string userId)
@@ -45,7 +47,9 @@ namespace Application.Service
                 if(user is null){
                     throw new Exception("User cannot found");
                 }
-                user.ProfilePicture = filePath;
+                var request = _httpContextAccessor.HttpContext!.Request;
+
+                user.ProfilePicture = $"{request.Scheme}://{request.Host}/uploads/{userId}/{file.FileName}";
                 await _userRepository.UpdateAsync(userId, user);
                 return filePath;
             }
