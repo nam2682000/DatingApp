@@ -49,6 +49,18 @@ public class UserController : ControllerBase
         return Ok(data);
     }
 
+    [HttpGet("user-match")]
+    public async Task<IActionResult> GetAllUserMatch()
+    {
+        var userId = User.FindFirstValue("userId");
+        if (userId is not null)
+        {
+            var data = await _userService.GetAllUserMatch(userId);
+            return Ok(data);
+        }
+        return BadRequest();
+    }
+
     [HttpPut("user-profile")]
     public async Task<IActionResult> UserUpdateProfile(UserProfileRequest model)
     {

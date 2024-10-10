@@ -2,6 +2,7 @@ using System;
 using Application.Common.Constants;
 using Application.DTOs.Requests;
 using Application.DTOs.Requests.User;
+using Application.DTOs.Responses;
 using Application.DTOs.Responses.User;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
@@ -16,17 +17,15 @@ namespace Application.Service
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
-        private readonly IRoleRepository _roleRepository;
         private readonly IViewerUserRepository _viewerUserRepository;
         private readonly ILikeRepository _likeRepository;
+        private readonly IMatchRepository _matchRepository;
         private readonly IMapper _mapper;
 
         public UserService(
-            IUserRepository userRepository, IRoleRepository roleRepository,
-            IMapper mapper, IViewerUserRepository viewerUserRepository, ILikeRepository likeRepository)
+            IUserRepository userRepository, IMapper mapper, IViewerUserRepository viewerUserRepository, ILikeRepository likeRepository)
         {
             _userRepository = userRepository;
-            _roleRepository = roleRepository;
             _mapper = mapper;
             _viewerUserRepository = viewerUserRepository;
             _likeRepository = likeRepository;
@@ -86,6 +85,23 @@ namespace Application.Service
             var filter = Builders<User>.Filter.Where(m=>m.Id == userId);
             var users = await _userRepository.GetUserWithReferenceAsync(filter);
             var result = _mapper.Map<UserProfileReponse>(users);
+            return result;
+        }
+
+        public async Task<List<UserMessageResponse>> GetAllUserMatch(string userId)
+        {
+            // Tạo bộ lọc để lấy tất cả các bản ghi match có chứa userId
+            var matchFilter = Builders<Match>.Filter.Where(m => m.User1 == userId || m.User2 == userId);
+            // Lấy danh sách match từ database
+            var matches = await _matchRepository.GetWhereSelectAsync(matchFilter);
+            // Tạo danh sách userId của các user đã match với user hiện tại
+            var matchedUserIds = matches.Select(m => m.User1 == userId ? m.User2 : m.User1).Distinct().ToArray();
+            // Tạo bộ lọc cho danh sách user đã match
+            var userFilter = Builders<User>.Filter.In(u => u.Id, matchedUserIds);
+            // Lấy thông tin user từ danh sách matchedUserIds
+            var matchedUsers = await _userRepository.GetWhereSelectAsync(userFilter);
+            // Ánh xạ danh sách matchedUsers sang đối tượng UserMessageResponse
+            var result = _mapper.Map<List<UserMessageResponse>>(matchedUsers);
             return result;
         }
     }

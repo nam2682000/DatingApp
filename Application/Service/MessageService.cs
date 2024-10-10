@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-        using Application.DTOs.Responses;
+using Application.DTOs.Responses;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using AutoMapper;
@@ -28,10 +28,10 @@ namespace Application.Service
             throw new NotImplementedException();
         }
 
-         public async Task<MessageResponses> GetMessageByUser(string userId, string receiverId)
+        public async Task<MessageResponses> GetMessageByUser(string userId, string receiverId)
         {
             var result = new MessageResponses();
-            var filter = Builders<Message>.Filter.Where(m=>(m.SenderId == userId && m.ReceiverId == receiverId) || (m.SenderId == receiverId && m.ReceiverId == userId));
+            var filter = Builders<Message>.Filter.Where(m => (m.SenderId == userId && m.ReceiverId == receiverId) || (m.SenderId == receiverId && m.ReceiverId == userId));
             var mess = await _messageRepository.GetWhereSelectAsync(filter);
             var receiver = await _userRepository.FindByIdAsync(receiverId);
             result.Messages = mess;
@@ -41,7 +41,8 @@ namespace Application.Service
 
         public async Task<bool> SendMessage(string userFromId, string userToId, string mess)
         {
-            await _messageRepository.CreateAsync(new Message{
+            await _messageRepository.CreateAsync(new Message
+            {
                 SenderId = userFromId,
                 ReceiverId = userToId,
                 Content = mess,

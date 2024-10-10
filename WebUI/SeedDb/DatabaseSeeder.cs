@@ -6,7 +6,6 @@ using Application.Common.Constants;
 using Application.Interfaces.Repositories;
 using Application.Security;
 using Domain.Entities.Entity;
-using Microsoft.VisualBasic;
 using MongoDB.Driver;
 
 namespace WebUI.SeedDb

@@ -47,6 +47,20 @@ namespace WebUI.DependencyInjection
                     ValidAudience = configuration.GetValue<string>("JwtSettings:Audience"),
                     ClockSkew = TimeSpan.Zero // Ngăn trễ giờ
                 };
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+                        // Nếu token được truyền qua query string và từ đường dẫn SignalR
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chatHub"))
+                        {
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
             });
             
             services.AddAutoMapper(typeof(AutoMapperProfile));
@@ -84,6 +98,7 @@ namespace WebUI.DependencyInjection
             }
             services.AddScoped<IJwtTokenService,JwtTokenService>();
             services.AddScoped<DatabaseSeeder>();
+            services.AddSignalR();
             return services;
         }
     }

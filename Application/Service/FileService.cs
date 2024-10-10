@@ -49,7 +49,7 @@ namespace Application.Service
                 }
                 var request = _httpContextAccessor.HttpContext!.Request;
 
-                user.ProfilePicture = $"{request.Scheme}://{request.Host}/uploads/{userId}/{file.FileName}";
+                user.ProfilePicture = $"/uploads/{userId}/{file.FileName}";
                 await _userRepository.UpdateAsync(userId, user);
                 return filePath;
             }

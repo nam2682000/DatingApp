@@ -4,6 +4,7 @@ using FluentValidation.AspNetCore;
 using WebUI.DependencyInjection;
 using System.Reflection;
 using WebUI.SeedDb;
+using Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var assemblyService = Assembly.Load("Application");
@@ -45,11 +46,15 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: "MyAllowSpecificOrigins",
-                      builder =>
-                      {
-                          builder.WithOrigins("http://localhost:5173");
-                      });
+    options.AddPolicy("MyAllowSpecificOrigins",
+        builder =>
+        {
+            builder
+                .WithOrigins("http://localhost:5173") // URL client
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials(); // Cho phép gửi thông tin xác thực (credentials)
+        });
 });
 
 
@@ -67,13 +72,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-
-app.UseAuthentication();
-app.UseAuthorization();
-app.UseCors("MyAllowSpecificOrigins");
-app.UseStaticFiles();
-
+app.UseCors("MyAllowSpecificOrigins"); // Đảm bảo CORS được áp dụng trước
+app.UseAuthentication(); // Đăng nhập người dùng
+app.UseAuthorization();  // Xác thực quyền truy cập
+app.UseStaticFiles();     // Nếu cần phục vụ tệp tĩnh
+// Cấu hình các điểm cuối (endpoints), bao gồm cả SignalR hub và controllers
+// Đăng ký SignalR Hub
+app.MapHub<ChatHub>("/chatHub");
+// Đăng ký các controller API
 app.MapControllers();
-
 app.Run();

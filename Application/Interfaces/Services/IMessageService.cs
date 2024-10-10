@@ -11,5 +11,6 @@ namespace Application.Interfaces.Services
         public Task<bool> SendMessage(string userFromId, string userToId, string mess);
         public Task<List<MessageAllResponse>> GetAllMessageForUsers(string userId);
         public Task<MessageResponses> GetMessageByUser(string userId, string receiverId);
+
     } 
 }
