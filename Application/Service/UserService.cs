@@ -23,12 +23,13 @@ namespace Application.Service
         private readonly IMapper _mapper;
 
         public UserService(
-            IUserRepository userRepository, IMapper mapper, IViewerUserRepository viewerUserRepository, ILikeRepository likeRepository)
+            IUserRepository userRepository, IMapper mapper, IViewerUserRepository viewerUserRepository, ILikeRepository likeRepository, IMatchRepository matchRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _viewerUserRepository = viewerUserRepository;
             _likeRepository = likeRepository;
+            _matchRepository = matchRepository;
         }
         public async Task<List<UserProfileReponse>> GetAll()
         {

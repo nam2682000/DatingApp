@@ -23,11 +23,12 @@ namespace Application.DTOs.Responses
 
     public class UserMessageResponse
     {
+        public required string Id { get; set; }
         public required string Username { get; set; }
         public required string Firstname { get; set; }  
         public required string Lastname { get; set; }
         public required string Gender { get; set; }
         public DateTime? LastActive { get; set; }
-        public string? ProfilePicture { get; set; } // Đường dẫn đến ảnh hồ sơ
+        public string? ProfilePicture { get; set; }
     }
 }

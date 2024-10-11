@@ -68,44 +68,38 @@ namespace Infrastructure.Repositories
 
         public async Task<bool> UserLikeUser(string userLikerId, string userLikeeId)
         {
-            using (var session = await _context.Database.Client.StartSessionAsync())
+            try
             {
-                session.StartTransaction();
-                try
+                var like = new Like
                 {
-                    await _context.Likes.InsertOneAsync(session, new Like
-                    {
-                        UserId = userLikerId,
-                        UserLikeeId = userLikeeId,
-                        LikedAt = DateTime.Now
-                    });
-
-                    var checkIsLike = await _context.Likes.Find(session, m => m.UserId == userLikeeId && m.UserLikeeId == userLikerId).FirstOrDefaultAsync();
-                    if (checkIsLike != null)
-                    {
-                        await _context.Matchs.InsertOneAsync(session, new Match
-                        {
-                            User1 = userLikerId,
-                            User2 = userLikeeId,
-                            MatchedAt = DateTime.Now
-                        });
-                    }
-
-                    await _context.ViewUsers.InsertOneAsync(session, new ViewUser
-                    {
-                        UserId = userLikerId,
-                        UserViewedId = userLikeeId,
-                    });
-
-                    await session.CommitTransactionAsync();
-                    return true;
-                }
-                catch (Exception ex)
+                    UserId = userLikerId,
+                    UserLikeeId = userLikeeId,
+                    LikedAt = DateTime.Now
+                };
+                
+                await _context.Likes.InsertOneAsync(like);
+                await _context.ViewUsers.InsertOneAsync(new ViewUser
                 {
-                    await session.AbortTransactionAsync();
-                    Console.WriteLine($"Transaction aborted: {ex.Message}");
-                    return false;
+                    UserId = userLikerId,
+                    UserViewedId = userLikeeId,
+                });
+
+                var checkIsLike = await _context.Likes.Find(m => m.UserId == userLikeeId && m.UserLikeeId == userLikerId).FirstOrDefaultAsync();
+                if (checkIsLike != null)
+                {
+                    await _context.Matchs.InsertOneAsync(new Match
+                    {
+                        User1 = userLikerId,
+                        User2 = userLikeeId,
+                        MatchedAt = DateTime.Now
+                    });
                 }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Transaction aborted: {ex.Message}");
+                return false;
             }
         }
 

@@ -39,16 +39,17 @@ namespace Application.Service
             return result;
         }
 
-        public async Task<bool> SendMessage(string userFromId, string userToId, string mess)
+        public async Task<Message> SendMessage(string userFromId, string userToId, string mess)
         {
-            await _messageRepository.CreateAsync(new Message
+            var message = new Message
             {
                 SenderId = userFromId,
                 ReceiverId = userToId,
                 Content = mess,
                 MessageAt = DateTime.Now
-            });
-            return true;
+            };
+            await _messageRepository.CreateAsync(message);
+            return message;
         }
     }
 }

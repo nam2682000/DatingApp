@@ -47,11 +47,11 @@ namespace Infrastructure.Services
         {
             var userId = Context.User?.FindFirstValue("userId");
             if(!string.IsNullOrEmpty(userId)){
-                await _messageService.SendMessage(userId,toUserId,message);
+                var mess = await _messageService.SendMessage(userId,toUserId,message);
                 // nếu user nhận đăng nhập thì mới gửi 
                 if (userConnections.TryGetValue(toUserId, out string connectionId))
                 {
-                    await Clients.Client(connectionId).SendAsync("ReceiveMessage", userId, message);
+                    await Clients.Client(connectionId).SendAsync("ReceiveMessage", mess);
                 }
             }
         }

@@ -76,11 +76,16 @@ public class UserController : ControllerBase
     [HttpPost("user-like")]
     public async Task<IActionResult> UserLikeUser(string userLikeeId)
     {
-        var userId = User.FindFirstValue("userId");
-        if (userId is not null)
-        {
-            var data = await _userService.UserLikeUser(userId,userLikeeId);
-            return Ok(data);
+        try{
+            var userId = User.FindFirstValue("userId");
+            if (userId is not null)
+            {
+                var data = await _userService.UserLikeUser(userId,userLikeeId);
+                return Ok(data);
+            }
+        }
+        catch(Exception e){
+            string mess = e.Message;
         }
         return BadRequest();
     }
