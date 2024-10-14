@@ -90,12 +90,12 @@ public class UserController : ControllerBase
         return BadRequest();
     }
     [HttpPost("user-next")]
-    public async Task<IActionResult> UserNextUser(string userLikeeId)
+    public async Task<IActionResult> UserNextUser(string userNextId)
     {
         var userId = User.FindFirstValue("userId");
         if (userId is not null)
         {
-            var data = await _userService.UserNextUser(userId,userLikeeId);
+            var data = await _userService.UserNextUser(userId,userNextId);
             return Ok(data);
         }
         return BadRequest();
