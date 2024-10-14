@@ -27,7 +27,7 @@ public class UserController : ControllerBase
             var data = await _userService.MyProfile(userId);
             return Ok(data);
         }
-        return BadRequest();  
+        return BadRequest();
     }
 
     [HttpGet("get-new-user")]
@@ -44,7 +44,7 @@ public class UserController : ControllerBase
 
     [HttpGet("all")]
     public async Task<IActionResult> GetAll()
-    { 
+    {
         var data = await _userService.GetAll();
         return Ok(data);
     }
@@ -74,28 +74,30 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("user-like")]
-    public async Task<IActionResult> UserLikeUser(string userLikeeId)
+    public async Task<IActionResult> UserLikeUser([FromBody] string userLikeeId)
     {
-        try{
+        try
+        {
             var userId = User.FindFirstValue("userId");
             if (userId is not null)
             {
-                var data = await _userService.UserLikeUser(userId,userLikeeId);
+                var data = await _userService.UserLikeUser(userId, userLikeeId);
                 return Ok(data);
             }
         }
-        catch(Exception e){
+        catch (Exception e)
+        {
             string mess = e.Message;
         }
         return BadRequest();
     }
     [HttpPost("user-next")]
-    public async Task<IActionResult> UserNextUser(string userNextId)
+    public async Task<IActionResult> UserNextUser([FromBody] string userNextId)
     {
         var userId = User.FindFirstValue("userId");
         if (userId is not null)
         {
-            var data = await _userService.UserNextUser(userId,userNextId);
+            var data = await _userService.UserNextUser(userId, userNextId);
             return Ok(data);
         }
         return BadRequest();

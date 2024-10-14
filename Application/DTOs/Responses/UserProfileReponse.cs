@@ -9,6 +9,7 @@ namespace Application.DTOs.Responses.User
 {
     public class UserProfileReponse
     {
+        public required string Id { get; set; }
         public required string Username { get; set; }
         public required string Firstname { get; set; }
         public required string Lastname { get; set; }
