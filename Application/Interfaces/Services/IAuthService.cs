@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Application.DTOs.Requests;
+using Application.DTOs.Requests.User;
 
 namespace Application.Interfaces.Services
 {

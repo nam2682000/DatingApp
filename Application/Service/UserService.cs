@@ -45,7 +45,7 @@ namespace Application.Service
             var filter = Builders<ViewUser>.Filter.Where(m => m.UserId == userId);
             var userVieweds = await _viewerUserRepository.GetWhereSelectAsync(filter, fields);
             var userViewedIds = userVieweds.Select(m => m.UserViewedId).ToArray();
-            var filterUser = Builders<User>.Filter.Where(m => !userViewedIds.Contains(m.Id));
+            var filterUser = Builders<User>.Filter.Where(m => !userViewedIds.Contains(m.Id) && m.Id != userId);
             var userNew = await _userRepository.FindWhereAsync(filterUser);
             return _mapper.Map<UserProfileReponse>(userNew);
         }
@@ -67,7 +67,7 @@ namespace Application.Service
 
         public async Task<bool> UserUpdateProfile(string userId, UserProfileRequest model)
         {
-            var location = new GeoJsonPoint<GeoJson2DCoordinates>(new GeoJson2DCoordinates(model.Longitude??0, model.Latitude??0));
+            var location = new GeoJsonPoint<GeoJson2DCoordinates>(new GeoJson2DCoordinates(model.Longitude ?? 0, model.Latitude ?? 0));
             var user = await _userRepository.FindByIdAsync(userId);
             user.Username = model.Username;
             user.Firstname = model.Firstname;
@@ -83,7 +83,7 @@ namespace Application.Service
 
         public async Task<UserProfileReponse> MyProfile(string userId)
         {
-            var filter = Builders<User>.Filter.Where(m=>m.Id == userId);
+            var filter = Builders<User>.Filter.Where(m => m.Id == userId);
             var users = await _userRepository.GetUserWithReferenceAsync(filter);
             var result = _mapper.Map<UserProfileReponse>(users);
             return result;

@@ -25,6 +25,6 @@ namespace Infrastructure.Context
         public IMongoCollection<Block> Blocks => _database.GetCollection<Block>("Block");
         public IMongoCollection<Message> Messages => _database.GetCollection<Message>("Message");
         public IMongoCollection<Interest> Interests => _database.GetCollection<Interest>("Interest");
-        public IMongoCollection<ViewUser> ViewUsers  => _database.GetCollection<ViewUser>("ViewUser");
+        public IMongoCollection<ViewUser> ViewUsers => _database.GetCollection<ViewUser>("ViewerUser");
     }
 }

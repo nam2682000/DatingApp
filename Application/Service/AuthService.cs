@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Application.Common.Constants;
 using Application.DTOs.Requests;
+using Application.DTOs.Requests.User;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Security;

@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Application.DTOs.Requests;
+using Application.DTOs.Requests.User;
 using FluentValidation;
 
 namespace Application.Validators
 {
-    public class UserValidator : AbstractValidator<UserRegisterRequest> 
+    public class UserValidator : AbstractValidator<UserRegisterRequest>
     {
         public UserValidator()
         {

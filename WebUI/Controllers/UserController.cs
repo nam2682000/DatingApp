@@ -74,14 +74,14 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("user-like")]
-    public async Task<IActionResult> UserLikeUser([FromBody] string userLikeeId)
+    public async Task<IActionResult> UserLikeUser([FromBody] UserLikeeRequest model)
     {
         try
         {
             var userId = User.FindFirstValue("userId");
             if (userId is not null)
             {
-                var data = await _userService.UserLikeUser(userId, userLikeeId);
+                var data = await _userService.UserLikeUser(userId, model.UserLikeeId);
                 return Ok(data);
             }
         }
@@ -92,12 +92,12 @@ public class UserController : ControllerBase
         return BadRequest();
     }
     [HttpPost("user-next")]
-    public async Task<IActionResult> UserNextUser([FromBody] string userNextId)
+    public async Task<IActionResult> UserNextUser([FromBody] UserNextRequest model)
     {
         var userId = User.FindFirstValue("userId");
         if (userId is not null)
         {
-            var data = await _userService.UserNextUser(userId, userNextId);
+            var data = await _userService.UserNextUser(userId, model.UserNextId);
             return Ok(data);
         }
         return BadRequest();

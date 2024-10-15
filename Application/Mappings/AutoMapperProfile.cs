@@ -1,11 +1,10 @@
 using Application.DTOs.DTO;
-using Application.DTOs.Requests;
+using Application.DTOs.Requests.User;
 using Application.DTOs.Responses;
 using Application.DTOs.Responses.User;
 using Application.Security;
 using AutoMapper;
 using Domain.Entities.Entity;
-using System;
 public class AutoMapperProfile : Profile
 {
     public AutoMapperProfile()
