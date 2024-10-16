@@ -27,7 +27,7 @@ builder.Services.AddSwaggerGen(options =>
         In = Microsoft.OpenApi.Models.ParameterLocation.Header,
         Description = "Enter 'Bearer' [space] and then your valid token in the text input below.\n\nExample: \"Bearer abc123xyz\""
     });
-    
+
     options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
     {
         {
@@ -59,16 +59,24 @@ builder.Services.AddCors(options =>
 
 
 var app = builder.Build();
+
+Console.WriteLine($"Environment: {Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}");
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    if (builder.Environment.IsDevelopment())
+    {
+        builder.Configuration.AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true);
+
+    }
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
 using (var scope = app.Services.CreateScope())
 {
     var seeder = scope.ServiceProvider.GetRequiredService<DatabaseSeeder>();
     await seeder.SeedAsync();
-}
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();

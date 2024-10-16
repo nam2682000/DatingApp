@@ -26,7 +26,7 @@ namespace WebUI.DependencyInjection
         public static IServiceCollection Injection(this IServiceCollection services, Assembly applicationAssembly, Assembly infrastructureAssembly)
         {
             services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
-            services.Configure<MongoDbSettings>(configuration.GetSection("MongoDB"));
+            services.Configure<MongoDbSettings>(configuration.GetSection("ConnectionStrings"));
 
             services.AddAuthentication(options =>
             {
@@ -62,12 +62,12 @@ namespace WebUI.DependencyInjection
                     }
                 };
             });
-            
+
             services.AddAutoMapper(typeof(AutoMapperProfile));
             // Registering the MongoDB client as a singleton
-            services.AddSingleton<IMongoClient>(s => new MongoClient(configuration.GetValue<string>("MongoDB:ConnectionString")));
+            services.AddSingleton<IMongoClient>(s => new MongoClient(configuration.GetValue<string>("ConnectionStrings:MongoDB")));
             // Registering the MongoDB database as a scoped service
-            services.AddScoped(s =>s.GetRequiredService<IMongoClient>().GetDatabase(configuration.GetValue<string>("MongoDB:DatabaseName")));
+            services.AddScoped(s => s.GetRequiredService<IMongoClient>().GetDatabase(configuration.GetValue<string>("ConnectionStrings:DatabaseName")));
             services.AddScoped<MongoDbContext>();
 
             var interfaceRepositories = applicationAssembly.DefinedTypes
@@ -96,7 +96,7 @@ namespace WebUI.DependencyInjection
                     services.AddScoped(interfaceType, type);
                 }
             }
-            services.AddScoped<IJwtTokenService,JwtTokenService>();
+            services.AddScoped<IJwtTokenService, JwtTokenService>();
             services.AddScoped<DatabaseSeeder>();
             services.AddSignalR();
             return services;
