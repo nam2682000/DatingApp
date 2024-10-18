@@ -10,6 +10,8 @@ services:
       - MONGO_INITDB_DATABASE=db
     volumes:
       - mongo-data:/data/db
+    networks:
+      - dating-app-network # Đặt tên mạng chung
 
   mongo-express:
     image: mongo-express:latest
@@ -20,12 +22,14 @@ services:
       - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
       - ME_CONFIG_MONGODB_ADMINPASSWORD=pass
       - ME_CONFIG_MONGODB_SERVER=mongodb
+    networks:
+      - dating-app-network # Đặt tên mạng chung
 
   webapp:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: DatingBE
+    container_name: dating-app-be
     ports:
       - "5176:5176" # Ánh xạ cổng 5176 của máy chủ sang cổng 8080 của container
     environment:
@@ -33,8 +37,14 @@ services:
       ConnectionStrings__MongoDB: "mongodb://admin:pass@mongodb:27017/db?authSource=admin"
     depends_on:
       - mongodb
+    networks:
+      - dating-app-network # Đặt tên mạng chung
 
 # Define named volumes
 volumes:
   mongo-data:
     driver: local
+networks:
+  dating-app-network:
+    driver: bridge
+    external: true
