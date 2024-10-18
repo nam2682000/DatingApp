@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 services:
   mongodb:
     image: mongo:latest
@@ -20,6 +20,19 @@ services:
       - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
       - ME_CONFIG_MONGODB_ADMINPASSWORD=pass
       - ME_CONFIG_MONGODB_SERVER=mongodb
+
+  webapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: DatingBE
+    ports:
+      - "5176:5176" # Ánh xạ cổng 5176 của máy chủ sang cổng 8080 của container
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Production"
+      ConnectionStrings__MongoDB: "mongodb://admin:pass@mongodb:27017/db?authSource=admin"
+    depends_on:
+      - mongodb
 
 # Define named volumes
 volumes:

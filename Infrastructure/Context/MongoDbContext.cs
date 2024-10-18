@@ -14,7 +14,7 @@ namespace Infrastructure.Context
         private readonly IMongoDatabase _database;
         public MongoDbContext(IOptions<MongoDbSettings> mongoDbSettings)
         {
-            var client = new MongoClient(mongoDbSettings.Value.ConnectionString);
+            var client = new MongoClient(mongoDbSettings.Value.MongoDB);
             _database = client.GetDatabase(mongoDbSettings.Value.DatabaseName);
         }
         public IMongoDatabase Database => _database;

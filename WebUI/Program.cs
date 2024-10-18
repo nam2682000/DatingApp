@@ -7,10 +7,19 @@ using WebUI.SeedDb;
 using Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+if (builder.Environment.EnvironmentName == "Development")
+{
+    builder.Configuration
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables();
+}
+
 var assemblyService = Assembly.Load("Application");
 var assemblyRepository = Assembly.Load("Infrastructure");
-
-builder.Services.Injection(assemblyService, assemblyRepository);
+builder.Services.Injection(builder.Configuration, assemblyService, assemblyRepository);
 builder.Services.AddControllers();
 builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 // Đăng ký tất cả các Validators trong Assembly chứa UserValidator
@@ -27,7 +36,7 @@ builder.Services.AddSwaggerGen(options =>
         In = Microsoft.OpenApi.Models.ParameterLocation.Header,
         Description = "Enter 'Bearer' [space] and then your valid token in the text input below.\n\nExample: \"Bearer abc123xyz\""
     });
-    
+
     options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
     {
         {
@@ -57,21 +66,23 @@ builder.Services.AddCors(options =>
         });
 });
 
-
 var app = builder.Build();
+
+Console.WriteLine($"Environment: {Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}");
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+
+}
+app.UseSwagger();
+app.UseSwaggerUI();
+
 using (var scope = app.Services.CreateScope())
 {
     var seeder = scope.ServiceProvider.GetRequiredService<DatabaseSeeder>();
     await seeder.SeedAsync();
 }
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseCors("MyAllowSpecificOrigins"); // Đảm bảo CORS được áp dụng trước
 app.UseAuthentication(); // Đăng nhập người dùng
 app.UseAuthorization();  // Xác thực quyền truy cập
