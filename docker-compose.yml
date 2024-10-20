@@ -25,11 +25,10 @@ services:
     networks:
       - dating-app-network # Đặt tên mạng chung
 
-  webapp:
+  dating-app-be:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: dating-app-be
     ports:
       - "5176:5176" # Ánh xạ cổng 5176 của máy chủ sang cổng 8080 của container
     environment:
