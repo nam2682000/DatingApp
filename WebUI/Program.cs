@@ -59,10 +59,9 @@ builder.Services.AddCors(options =>
         builder =>
         {
             builder
-                .WithOrigins("http://localhost:5173") // URL client
+                .AllowAnyOrigin()   // Cho phép bất kỳ origin nào
                 .AllowAnyHeader()
-                .AllowAnyMethod()
-                .AllowCredentials(); // Cho phép gửi thông tin xác thực (credentials)
+                .AllowAnyMethod();
         });
 });
 
