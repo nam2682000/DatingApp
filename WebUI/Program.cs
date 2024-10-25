@@ -61,6 +61,7 @@ builder.Services.AddCors(options =>
             builder
                 .AllowAnyOrigin()   // Cho phép bất kỳ origin nào
                 .AllowAnyHeader()
+                .SetIsOriginAllowed((host) => true)
                 .AllowAnyMethod();
         });
 });

@@ -25,7 +25,7 @@ services:
     networks:
       - dating-app-network # Đặt tên mạng chung
 
-  datingappbe:
+  dating-app-be:
     build:
       context: .
       dockerfile: Dockerfile
