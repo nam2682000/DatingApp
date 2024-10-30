@@ -58,11 +58,10 @@ builder.Services.AddCors(options =>
     options.AddPolicy("MyAllowSpecificOrigins",
         builder =>
         {
-            builder
-                .AllowAnyOrigin()   // Cho phép bất kỳ origin nào
-                .AllowAnyHeader()
-                .SetIsOriginAllowed((host) => true)
-                .AllowAnyMethod();
+            builder.WithOrigins(["http://localhost:5173", "http://localhost:5555", "http://chasenamtndev.io.vn:5173", "http://chasenamtndev.io.vn:5555"]) // URL của frontend
+                   .AllowAnyHeader()
+                   .AllowAnyMethod()
+                   .AllowCredentials();
         });
 });
 
